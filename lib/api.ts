@@ -19,12 +19,3 @@ export async function getNotifications() {
   const res = await fetch(`${API_BASE}/admin/notifications`);
   return res.json();
 }
-
-export async function takeAction(id: string, action: string, notes?: string) {
-  const res = await fetch(`${API_BASE}/admin/applications/${id}/action`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action, notes }),
-  });
-  return res.json();
-}
