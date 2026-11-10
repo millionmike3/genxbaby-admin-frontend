@@ -40,6 +40,7 @@ export default function MatrixEditor() {
 
   async function save() {
     setStatus(null);
+
     try {
       const blob = new Blob([raw], { type: "application/json" });
       const file = new File([blob], "matrix.json", { type: "application/json" });
@@ -63,11 +64,15 @@ export default function MatrixEditor() {
       console.log("Matrix upload raw response:", uploadText);
 
       if (!res.ok) {
-        let errJson = {};
+        // 🔥 FIX: TypeScript-safe error parsing
+        let errJson: any = {};
         try {
           errJson = JSON.parse(uploadText);
-        } catch {}
-        throw new Error(errJson.detail || "Upload failed");
+        } catch {
+          // ignore parse errors
+        }
+
+        throw new Error(errJson?.detail || "Upload failed");
       }
 
       setStatus("Matrix updated successfully.");
@@ -81,21 +86,25 @@ export default function MatrixEditor() {
       <h3 className="text-xl font-semibold text-emerald-400">
         Matrix Editor (JSON)
       </h3>
+
       <p className="text-slate-400">
         Edit the pricing matrix JSON directly. Upload validates base_rates,
         adjustments, and investor_overlays.
       </p>
+
       <textarea
         className="w-full h-80 bg-slate-950 border border-slate-800 rounded-lg p-3 font-mono text-xs text-slate-100"
         value={raw}
         onChange={(e) => setRaw(e.target.value)}
       />
+
       <button
         onClick={save}
         className="px-4 py-2 rounded bg-emerald-500 text-slate-950 font-medium"
       >
         Save Matrix
       </button>
+
       {status && <p className="text-xs text-slate-300 mt-2">{status}</p>}
     </div>
   );
