@@ -8,19 +8,31 @@ export default function MatrixEditor() {
 
   useEffect(() => {
     async function load() {
+      // 🔥 Debug: show the base URL
       console.log(
         "Pricing Engine URL:",
         process.env.NEXT_PUBLIC_PRICING_ENGINE_URL
       );
 
+      const url =
+        process.env.NEXT_PUBLIC_PRICING_ENGINE_URL + "/matrix/current";
+
+      // 🔥 Debug: show the full fetch URL
+      console.log("Matrix fetch URL:", url);
+
       try {
-        const res = await fetch(
-          process.env.NEXT_PUBLIC_PRICING_ENGINE_URL + "/matrix/current"
-        );
-        if (!res.ok) return;
-        const data = await res.json();
+        const res = await fetch(url);
+
+        // 🔥 Debug: inspect raw response BEFORE JSON parsing
+        const text = await res.text();
+        console.log("Matrix raw response:", text);
+
+        // Parse JSON safely
+        const data = JSON.parse(text);
         setRaw(JSON.stringify(data, null, 2));
-      } catch {}
+      } catch (err) {
+        console.error("MatrixEditor load error:", err);
+      }
     }
 
     load();
@@ -35,17 +47,27 @@ export default function MatrixEditor() {
       const formData = new FormData();
       formData.append("file", file);
 
-      const res = await fetch(
-        process.env.NEXT_PUBLIC_PRICING_ENGINE_URL + "/matrix/upload",
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+      const url =
+        process.env.NEXT_PUBLIC_PRICING_ENGINE_URL + "/matrix/upload";
+
+      // 🔥 Debug: show upload URL
+      console.log("Matrix upload URL:", url);
+
+      const res = await fetch(url, {
+        method: "POST",
+        body: formData,
+      });
+
+      // 🔥 Debug: inspect raw upload response
+      const uploadText = await res.text();
+      console.log("Matrix upload raw response:", uploadText);
 
       if (!res.ok) {
-        const err = await res.json().catch(() => ({}));
-        throw new Error(err.detail || "Upload failed");
+        let errJson = {};
+        try {
+          errJson = JSON.parse(uploadText);
+        } catch {}
+        throw new Error(errJson.detail || "Upload failed");
       }
 
       setStatus("Matrix updated successfully.");

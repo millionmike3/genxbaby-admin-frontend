@@ -24,7 +24,6 @@ type Matrix = {
   investor_overlays: InvestorOverlays;
 };
 
-
 export default function MatrixView() {
   const [matrix, setMatrix] = useState<Matrix | null>(null);
   const [loading, setLoading] = useState(false);
@@ -36,10 +35,25 @@ export default function MatrixView() {
       setError(null);
 
       try {
+        // 🔥 Debug: show the base URL
+        console.log(
+          "Pricing Engine URL:",
+          process.env.NEXT_PUBLIC_PRICING_ENGINE_URL
+        );
+
         const url =
           process.env.NEXT_PUBLIC_PRICING_ENGINE_URL + "/matrix/current";
 
-        const data = (await (await fetch(url)).json()) as Partial<Matrix>;
+        // 🔥 Debug: show the full fetch URL
+        console.log("Matrix fetch URL:", url);
+
+        // 🔥 Debug: inspect raw response BEFORE JSON parsing
+        const res = await fetch(url);
+        const text = await res.text();
+        console.log("Matrix raw response:", text);
+
+        // Now parse JSON safely
+        const data = JSON.parse(text) as Partial<Matrix>;
 
         const safeMatrix: Matrix = {
           base_rates: data.base_rates ?? {},
