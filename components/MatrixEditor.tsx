@@ -8,6 +8,11 @@ export default function MatrixEditor() {
 
   useEffect(() => {
     async function load() {
+      console.log(
+        "Pricing Engine URL:",
+        process.env.NEXT_PUBLIC_PRICING_ENGINE_URL
+      );
+
       try {
         const res = await fetch(
           process.env.NEXT_PUBLIC_PRICING_ENGINE_URL + "/matrix/current"
@@ -17,6 +22,7 @@ export default function MatrixEditor() {
         setRaw(JSON.stringify(data, null, 2));
       } catch {}
     }
+
     load();
   }, []);
 
@@ -54,7 +60,8 @@ export default function MatrixEditor() {
         Matrix Editor (JSON)
       </h3>
       <p className="text-slate-400">
-        Edit the pricing matrix JSON directly. Upload validates base_rates, adjustments, and investor_overlays.
+        Edit the pricing matrix JSON directly. Upload validates base_rates,
+        adjustments, and investor_overlays.
       </p>
       <textarea
         className="w-full h-80 bg-slate-950 border border-slate-800 rounded-lg p-3 font-mono text-xs text-slate-100"
