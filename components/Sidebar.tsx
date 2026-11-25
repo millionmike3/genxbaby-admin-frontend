@@ -15,11 +15,9 @@ import {
 } from "lucide-react";
 
 const navItems = [
-  { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
-  { label: "Pricing Engine", href: "/admin/pricing", icon: LineChart },
-  { label: "Matrix Management", href: "/admin/matrix", icon: Table },
-  { label: "Investor Sheets", href: "/admin/investors", icon: Users },
-  { label: "System Health", href: "/admin/system-health", icon: Activity },
+  { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { label: "Pricing Engine", href: "/", icon: LineChart },
+  { label: "Matrix Management", href: "/admin#matrix-intelligence", icon: Table },
   { label: "A/B Pricing Test", href: "/pricing-ab", icon: FlaskConical },
 ];
 
