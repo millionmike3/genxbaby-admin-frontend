@@ -154,8 +154,10 @@ function DataTable({
 
 function AdjustmentCards({
   data,
+  valueType = "adjustment",
 }: {
   data?: Record<string, number>;
+  valueType?: "adjustment" | "score";
 }) {
   if (!data || Object.keys(data).length === 0) {
     return (
@@ -183,7 +185,7 @@ function AdjustmentCards({
                 ? "text-emerald-400"
                 : "text-white"
           }`}>
-            {formatAdjustment(value)}
+            {valueType === "score" ? String(value) : formatAdjustment(value)}
           </p>
         </div>
       ))}
@@ -548,6 +550,7 @@ export default function MatrixView() {
 
               <AdjustmentCards
                 data={rules}
+                valueType={category === "minFico" ? "score" : "adjustment"}
               />
 
             </div>
